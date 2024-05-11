@@ -13,10 +13,10 @@ namespace BetterFlashlight
         internal static void Load()
         {
             // GLOBAL
-            flashTime = BetterFlashlight.configFile.Bind<float>("_Global_", "Flash Time", 2f, "Overall chance of scrap appearing.\nThis value does not replace the chance of appearance for each curse; the latter are considered after the overall chance to determine which curse is chosen.\nYou can adjust this value according to the moon by adding its name along with its value (moon:value). Each key/value pair should be separated by a comma.");
-            stunTime = BetterFlashlight.configFile.Bind<float>("_Global_", "Stun Time", 3f, "Overall chance of scrap appearing.\nThis value does not replace the chance of appearance for each curse; the latter are considered after the overall chance to determine which curse is chosen.\nYou can adjust this value according to the moon by adding its name along with its value (moon:value). Each key/value pair should be separated by a comma.");
-            lightAngle = BetterFlashlight.configFile.Bind<float>("_Global_", "Light Angle", 15f, "Overall chance of scrap appearing.\nThis value does not replace the chance of appearance for each curse; the latter are considered after the overall chance to determine which curse is chosen.\nYou can adjust this value according to the moon by adding its name along with its value (moon:value). Each key/value pair should be separated by a comma.");
-            enemyAngle = BetterFlashlight.configFile.Bind<float>("_Global_", "Light Angle", 120f, "Overall chance of scrap appearing.\nThis value does not replace the chance of appearance for each curse; the latter are considered after the overall chance to determine which curse is chosen.\nYou can adjust this value according to the moon by adding its name along with its value (moon:value). Each key/value pair should be separated by a comma.");
+            flashTime = BetterFlashlight.configFile.Bind<float>("_Global_", "Flash Time", 2f, "Time required to blind an enemy.");
+            stunTime = BetterFlashlight.configFile.Bind<float>("_Global_", "Stun Time", 3f, "Duration of the stun.");
+            lightAngle = BetterFlashlight.configFile.Bind<float>("_Global_", "Light Angle", 15f, "Angle of the light in relation to the enemy's eyes.\nIncreasing this value makes aiming easier.");
+            enemyAngle = BetterFlashlight.configFile.Bind<float>("_Global_", "Light Angle", 120f, "Angle of the enemy in relation to the flashlight.\nIncreasing this value makes blinding from an angle easier.");
         }
     }
 }
