@@ -11,6 +11,8 @@ namespace BetterFlashlight
         public static ConfigEntry<float> enemyLightAngle;
         public static ConfigEntry<float> enemyAngle;
         public static ConfigEntry<float> enemyDistance;
+        public static ConfigEntry<float> enemyImmunityTime;
+        public static ConfigEntry<float> enemyBatteryConsumption;
         public static ConfigEntry<string> enemyValues;
         public static ConfigEntry<string> exclusions;
         // PLAYER VALUES
@@ -19,6 +21,7 @@ namespace BetterFlashlight
         public static ConfigEntry<float> playerLightAngle;
         public static ConfigEntry<float> playerAngle;
         public static ConfigEntry<float> playerDistance;
+        public static ConfigEntry<float> playerBatteryConsumption;
 
         internal static void Load()
         {
@@ -28,14 +31,17 @@ namespace BetterFlashlight
             enemyLightAngle = BetterFlashlight.configFile.Bind<float>("Enemy values", "Light Angle", 15f, "Default angle of the light in relation to the enemy's eyes.\nIncreasing this value makes aiming easier.");
             enemyAngle = BetterFlashlight.configFile.Bind<float>("Enemy values", "Light Angle", 120f, "Default angle of the enemy in relation to the flashlight.\nIncreasing this value makes blinding from an angle easier.");
             enemyDistance = BetterFlashlight.configFile.Bind<float>("Enemy values", "Distance", 10f, "Default distance between the enemy and the flashlight.");
-            enemyValues = BetterFlashlight.configFile.Bind<string>("Enemy values", "Values", "ForestGiant:2:4:30:120:20", "Values per enemy, the format is EnemyName:FlashTime:StunTime:LightAngle:EnemyAngle:EnemyDistance.");
+            enemyImmunityTime = BetterFlashlight.configFile.Bind<float>("Enemy values", "Immunity Time", 10f, "Default duration of the immunity.");
+            enemyBatteryConsumption = BetterFlashlight.configFile.Bind<float>("Enemy values", "Battery Consumption", 0f, "Default battery consumption rate for blinding an enemy.");
+            enemyValues = BetterFlashlight.configFile.Bind<string>("Enemy values", "Values", "ForestGiant:2:4:30:120:20:20:0", "Values per enemy, the format is EnemyName:FlashTime:StunTime:LightAngle:EnemyAngle:EnemyDistance:ImmunityTime:BatteryConsumption.");
             exclusions = BetterFlashlight.configFile.Bind<string>("Enemy values", "Exclusion list", null, "List of creatures that will not be affected by the stun.");
             // PLAYER VALUES
             isPlayerBlind = BetterFlashlight.configFile.Bind<bool>("Player values", "Enable", true, "Can the player be blinded?");
             playerFlashTime = BetterFlashlight.configFile.Bind<float>("Player values", "Flash Time", 2f, "Time required to blind a player.");
             playerLightAngle = BetterFlashlight.configFile.Bind<float>("Player values", "Light Angle", 15f, "Angle of the light in relation to the player's eyes.\nIncreasing this value makes aiming easier.");
             playerAngle = BetterFlashlight.configFile.Bind<float>("Player values", "Light Angle", 120f, "Angle of the player in relation to the flashlight.\nIncreasing this value makes blinding from an angle easier.");
-            playerDistance = BetterFlashlight.configFile.Bind<float>("Enemy values", "Distance", 10f, "Default distance between the aimed player and the flashlight.");
+            playerDistance = BetterFlashlight.configFile.Bind<float>("Player values", "Distance", 10f, "Default distance between the aimed player and the flashlight.");
+            playerBatteryConsumption = BetterFlashlight.configFile.Bind<float>("Player values", "Battery Consumption", 0f, "Default battery consumption rate for blinding a player.");
         }
 
         internal static List<FlashlightStun> GetFlashlightStunsFromConfig()
@@ -45,9 +51,9 @@ namespace BetterFlashlight
             foreach (string enemyValue in enemies)
             {
                 string[] values = enemyValue.Split(':');
-                if (values.Length == 6)
+                if (values.Length == 8)
                 {
-                    flashlightStuns.Add(new FlashlightStun(values[0], float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5])));
+                    flashlightStuns.Add(new FlashlightStun(values[0], float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3]), float.Parse(values[4]), float.Parse(values[5]), float.Parse(values[6]), float.Parse(values[7])));
                 }
             }
             return flashlightStuns;
