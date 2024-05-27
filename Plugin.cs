@@ -11,7 +11,7 @@ namespace BetterFlashlight
     {
         private const string modGUID = "Lega.BetterFlashlight";
         private const string modName = "Better Flashlight";
-        private const string modVersion = "1.0.3";
+        private const string modVersion = "1.0.4";
 
         private readonly Harmony harmony = new Harmony(modGUID);
 
@@ -33,6 +33,8 @@ namespace BetterFlashlight
 
             harmony.PatchAll(typeof(BetterFlashlight));
             harmony.PatchAll(typeof(FlashlightItemPatch));
+            harmony.PatchAll(typeof(EnemyAIPatch));
+            harmony.PatchAll(typeof(RoundManagerPatch));
         }
     }
 }

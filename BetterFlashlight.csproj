@@ -66,7 +66,9 @@
   <ItemGroup>
     <Compile Include="ConfigManager.cs" />
     <Compile Include="FlashlightStun.cs" />
+    <Compile Include="Patches\EnemyAIPatch.cs" />
     <Compile Include="Patches\FlashlightItemPatch.cs" />
+    <Compile Include="Patches\RoundManagerPatch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

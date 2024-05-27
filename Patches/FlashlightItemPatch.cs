@@ -1,6 +1,7 @@
 ﻿using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace BetterFlashlight.Patches
 {
     internal class FlashlightItemPatch
     {
+        internal static List<EnemyAI> blindableEnemies = new List<EnemyAI>();
         private static bool isFlashing = false;
         private static float maxSpotAngle;
 
@@ -25,8 +27,7 @@ namespace BetterFlashlight.Patches
             if (__instance.isBeingUsed && !isFlashing)
             {
                 FlashlightItem flashlightItem = __instance;
-                foreach (EnemyAI enemy in Object.FindObjectsOfType<EnemyAI>().ToList()
-                    .Where(e => e.enemyType != null && !ConfigManager.exclusions.Value.Contains(e.enemyType.enemyName) && e.eye != null && e.enemyType.canBeStunned))
+                foreach (EnemyAI enemy in blindableEnemies.Where(e => e.enemyType != null && e.enemyType.canBeStunned && e.eye != null))
                 {
                     float flashTime = ConfigManager.enemyFlashTime.Value;
                     float stunTime = ConfigManager.enemyStunTime.Value;
@@ -55,8 +56,7 @@ namespace BetterFlashlight.Patches
 
                 if (ConfigManager.isPlayerBlind.Value && !isFlashing)
                 {
-                    foreach (PlayerControllerB player in Object.FindObjectsOfType<PlayerControllerB>().ToList()
-                    .Where(p => p.isPlayerControlled))
+                    foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts.Where(p => p.isPlayerControlled))
                     {
                         float flashTime = ConfigManager.playerFlashTime.Value;
                         float lightAngle = ConfigManager.playerLightAngle.Value;
@@ -71,20 +71,6 @@ namespace BetterFlashlight.Patches
                         }
                     }
                 }
-            }
-        }
-
-        [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.SetEnemyStunned))]
-        [HarmonyPostfix]
-        private static void PostSetEnemyStunned(ref EnemyAI __instance)
-        {
-            if (!__instance.isEnemyDead && __instance.enemyType.canBeStunned)
-            {
-                float immunityTime = ConfigManager.enemyImmunityTime.Value;
-                EnemyAI enemy = __instance;
-                FlashlightStun flashlightStun = BetterFlashlight.flashlightStuns.Where(v => v.EnemyName.Equals(enemy.enemyType.enemyName)).FirstOrDefault();
-                if (flashlightStun != null) immunityTime = flashlightStun.ImmunityTime;
-                __instance.StartCoroutine(ImmuneCoroutine(__instance, immunityTime));
             }
         }
 
@@ -131,13 +117,6 @@ namespace BetterFlashlight.Patches
             flashlightItem.flashlightBulb.spotAngle = maxSpotAngle;
             isFlashing = false;
             return false;
-        }
-
-        private static IEnumerator ImmuneCoroutine(EnemyAI enemy, float immunityTime)
-        {
-            enemy.enemyType.canBeStunned = false;
-            yield return new WaitForSeconds(immunityTime);
-            enemy.enemyType.canBeStunned = true;
         }
     }
 }
