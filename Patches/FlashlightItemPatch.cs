@@ -72,6 +72,11 @@ namespace BetterFlashlight.Patches
                     }
                 }
             }
+
+            if (__instance.flashlightBulb.spotAngle != maxSpotAngle)
+            {
+                __instance.flashlightBulb.spotAngle = maxSpotAngle;
+            }
         }
 
         private static IEnumerator StunCoroutine<T>(Transform eye, FlashlightItem flashlightItem, T entity, float flashTime, float lightAngle, float angle, float distance, float batteryConsumption, float stunTime = 0f)

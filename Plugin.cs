@@ -11,22 +11,15 @@ namespace BetterFlashlight
     {
         private const string modGUID = "Lega.BetterFlashlight";
         private const string modName = "Better Flashlight";
-        private const string modVersion = "1.0.4";
+        private const string modVersion = "1.0.5";
 
         private readonly Harmony harmony = new Harmony(modGUID);
-
-        private static BetterFlashlight Instance;
 
         public static ConfigFile configFile;
         public static List<FlashlightStun> flashlightStuns = new List<FlashlightStun>();
 
         void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-
             configFile = Config;
             ConfigManager.Load();
             flashlightStuns = ConfigManager.GetFlashlightStunsFromConfig();

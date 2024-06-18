@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -11,13 +12,15 @@ namespace BetterFlashlight.Patches
         [HarmonyPostfix]
         private static void StartEnemy(ref EnemyAI __instance)
         {
-            if (__instance.enemyType != null
-                && __instance.enemyType.canBeStunned
-                && __instance.eye != null
-                && (string.IsNullOrEmpty(ConfigManager.exclusions.Value) || !ConfigManager.exclusions.Value.Contains(__instance.enemyType.enemyName)))
-            {
-                FlashlightItemPatch.blindableEnemies.Add(__instance);
-            }
+            AddBlindableEnemy(ref __instance);
+        }
+
+        [HarmonyPatch(typeof(MaskedPlayerEnemy), nameof(MaskedPlayerEnemy.Start))]
+        [HarmonyPostfix]
+        private static void StartMaskedEnemy(ref MaskedPlayerEnemy __instance)
+        {
+            EnemyAI enemy = __instance;
+            AddBlindableEnemy(ref enemy);
         }
 
         [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.KillEnemy))]
@@ -38,6 +41,17 @@ namespace BetterFlashlight.Patches
                 FlashlightStun flashlightStun = BetterFlashlight.flashlightStuns.Where(v => v.EnemyName.Equals(enemy.enemyType.enemyName)).FirstOrDefault();
                 if (flashlightStun != null) immunityTime = flashlightStun.ImmunityTime;
                 __instance.StartCoroutine(ImmuneCoroutine(__instance, immunityTime));
+            }
+        }
+
+        private static void AddBlindableEnemy(ref EnemyAI enemy)
+        {
+            if (enemy.enemyType != null
+                && enemy.enemyType.canBeStunned
+                && enemy.eye != null
+                && (string.IsNullOrEmpty(ConfigManager.exclusions.Value) || !ConfigManager.exclusions.Value.Contains(enemy.enemyType.enemyName)))
+            {
+                FlashlightItemPatch.blindableEnemies.Add(enemy);
             }
         }
 
